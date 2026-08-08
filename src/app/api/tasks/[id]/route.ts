@@ -27,16 +27,35 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   const oldStatus = task.status
   const oldAssignee = task.assigneeId
-  const updated = await prisma.task.update({ where: { id: taskId }, data: updateData, include: { creator: { select: { id: true, name: true } }, assignee: { select: { id: true, name: true } } } })
+
+  // Simulate heavier processing and widen the window for concurrent updates to interleave.
+  await new Promise((resolve) => setTimeout(resolve, 150))
+
+  // BUG: Optimistic lock on the assignee we read before the delay. If a concurrent
+  // request changed the assignee in the meantime, this update silently drops the
+  // new assignment and the caller sees the stale task.
+  const updateResult = await prisma.task.updateMany({
+    where: { id: taskId, assigneeId: oldAssignee },
+    data: updateData,
+  })
+
+  if (updateResult.count === 0) {
+    return NextResponse.json({ task })
+  }
+
+  const updated = await prisma.task.findUnique({
+    where: { id: taskId },
+    include: { creator: { select: { id: true, name: true } }, assignee: { select: { id: true, name: true } } },
+  })
 
   const activities: any[] = []
-  if (oldStatus !== updated.status) {
-    activities.push({ projectId: task.projectId, taskId, userId: authResult.user.id, action: 'TASK_STATUS_CHANGED', details: `Moved task "${updated.title}" -> ${updated.status.replace('_', ' ')}` })
+  if (oldStatus !== updated?.status) {
+    activities.push({ projectId: task.projectId, taskId, userId: authResult.user.id, action: 'TASK_STATUS_CHANGED', details: `Moved task "${updated?.title}" -> ${updated?.status.replace('_', ' ')}` })
   }
-  if (oldAssignee !== updated.assigneeId) {
-    const assigneeName = updated.assignee?.name || 'unassigned'
-    activities.push({ projectId: task.projectId, taskId, userId: authResult.user.id, action: 'TASK_ASSIGNED', details: `Assigned task "${updated.title}" to ${assigneeName}` })
-    if (updated.assigneeId && updated.assigneeId !== authResult.user.id) {
+  if (oldAssignee !== updated?.assigneeId) {
+    const assigneeName = updated?.assignee?.name || 'unassigned'
+    activities.push({ projectId: task.projectId, taskId, userId: authResult.user.id, action: 'TASK_ASSIGNED', details: `Assigned task "${updated?.title}" to ${assigneeName}` })
+    if (updated?.assigneeId && updated.assigneeId !== authResult.user.id) {
       await notificationQueue.add('notify', { userId: updated.assigneeId, message: `${authResult.user.name} assigned you task "${updated.title}"` })
     }
   }
