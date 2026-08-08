@@ -1,0 +1,67 @@
+Command: cd /workspace/repo && npm run build 2>&1 | tail -60
+Cwd: /workspace/repo
+
+=== STDOUT ===
+./src/lib/queue.ts
+./src/app/api/tasks/route.ts
+
+[Error: Cannot apply unknown utility class `px-4`. Are you using CSS modules or similar and missing `@reference`? https://tailwindcss.com/docs/functions-and-directives#reference-directive]
+<w> [webpack.cache.PackFileCacheStrategy] Skipped not serializable cache item 'Compilation/modules|/workspace/repo/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!/workspace/repo/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!/workspace/repo/src/app/globals.css': No serializer registered for PostCSSSyntaxError
+<w> while serializing webpack/lib/cache/PackFileCacheStrategy.PackContentItems -> webpack/lib/NormalModule -> webpack/lib/ModuleBuildError -> PostCSSSyntaxError
+Failed to compile.
+
+./src/app/globals.css:1:1
+Syntax error: tailwindcss: /workspace/repo/src/app/globals.css Cannot apply unknown utility class `px-4`. Are you using CSS modules or similar and missing `@reference`? https://tailwindcss.com/docs/functions-and-directives#reference-directive
+
+> 1 | @tailwind base;
+    | ^
+  2 | @tailwind components;
+  3 | @tailwind utilities;
+
+./src/app/globals.css
+Syntax error: tailwindcss: /workspace/repo/src/app/globals.css Cannot apply unknown utility class `px-4`. Are you using CSS modules or similar and missing `@reference`? https://tailwindcss.com/docs/functions-and-directives#reference-directive (1:1)
+
+> 1 | @tailwind base;
+    | ^
+  2 | @tailwind components;
+  3 | @tailwind utilities;
+
+    at tryRunOrWebpackError (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:316119)
+    at __webpack_require_module__ (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:131532)
+    at __nested_webpack_require_161494__ (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:130967)
+    at /workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:131824
+    at symbolIterator (/workspace/repo/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+    at done (/workspace/repo/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
+    at Hook.eval [as callAsync] (eval at create (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:15:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:14:6378)
+    at /workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:130687
+    at symbolIterator (/workspace/repo/node_modules/next/dist/compiled/neo-async/async.js:1:14402)
+-- inner error --
+Syntax error: tailwindcss: /workspace/repo/src/app/globals.css Cannot apply unknown utility class `px-4`. Are you using CSS modules or similar and missing `@reference`? https://tailwindcss.com/docs/functions-and-directives#reference-directive (1:1)
+
+> 1 | @tailwind base;
+    | ^
+  2 | @tailwind components;
+  3 | @tailwind utilities;
+
+    at Object.<anonymous> (/workspace/repo/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!/workspace/repo/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!/workspace/repo/src/app/globals.css:1:7)
+    at /workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:962717
+    at Hook.eval [as call] (eval at create (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:14:9002), <anonymous>:7:1)
+    at Hook.CALL_DELEGATE [as _call] (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:14:6272)
+    at /workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:131565
+    at tryRunOrWebpackError (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:316073)
+    at __webpack_require_module__ (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:131532)
+    at __nested_webpack_require_161494__ (/workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:130967)
+    at /workspace/repo/node_modules/next/dist/compiled/webpack/bundle5.js:29:131824
+    at symbolIterator (/workspace/repo/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+
+Generated code for /workspace/repo/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!/workspace/repo/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!/workspace/repo/src/app/globals.css
+
+Import trace for requested module:
+./src/app/globals.css
+
+
+> Build failed because of webpack errors
+
+
+=== STDERR ===

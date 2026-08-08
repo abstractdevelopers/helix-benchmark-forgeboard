@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env
+.env.local
+*.log
+npm-debug.log*
+Docker
+docker-compose.override.yml
+pgdata/
+coverage/
+playwright-report/
+test-results/
