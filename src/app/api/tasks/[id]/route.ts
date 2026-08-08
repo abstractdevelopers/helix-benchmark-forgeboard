@@ -28,23 +28,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const oldStatus = task.status
   const oldAssignee = task.assigneeId
 
-  // Simulate heavier processing and widen the window for concurrent updates to interleave.
-  await new Promise((resolve) => setTimeout(resolve, 150))
-
-  // BUG: Optimistic lock on the assignee we read before the delay. If a concurrent
-  // request changed the assignee in the meantime, this update silently drops the
-  // new assignment and the caller sees the stale task.
-  const updateResult = await prisma.task.updateMany({
-    where: { id: taskId, assigneeId: oldAssignee },
-    data: updateData,
-  })
-
-  if (updateResult.count === 0) {
-    return NextResponse.json({ task })
-  }
-
-  const updated = await prisma.task.findUnique({
+  // FIX: Use prisma.task.update (match on ID only) instead of updateMany with
+  // a stale assigneeId check.  The previous code did:
+  //   updateMany({ where: { id: taskId, assigneeId: oldAssignee }, ... })
+  // which silently dropped concurrent re-assignments (count === 0) and returned
+  // stale task data.  Authorization is already verified above so the ID-only
+  // where clause is safe.
+  const updated = await prisma.task.update({
     where: { id: taskId },
+    data: updateData,
     include: { creator: { select: { id: true, name: true } }, assignee: { select: { id: true, name: true } } },
   })
 
